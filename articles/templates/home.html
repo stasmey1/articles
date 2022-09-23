@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>home</title>{% endblock %}
+
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<h2>hi, {{user.username}}!</h2>
+<p><a href="{% url 'logout' %}"> logout</a></p>
+
+{% else %}
+
+
+{% endif %}
+
+
+<p><a href="{% url 'posts_list' %}"> posts_list</a></p>
+<p><a href="{% url 'req_test' %}"> req_test</a></p>
+
+{% endblock %}

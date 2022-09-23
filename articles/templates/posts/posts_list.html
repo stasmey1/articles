@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>posts_list</title>{% endblock %}
+
+
+{% block content %}
+
+<a class="btn btn-primary mb-2 " href="{% url 'post_create' %}" role="button">Написать пост</a>
+
+<div class="row">
+    {% for post in object_list %}
+    <div class="col-4 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <a href="{{post.get_absolute_url}}"><h5 class="card-title">{{post.title}}</h5></a>
+                <p class="card-text">{{post.body|truncatechars:300}}</p>
+            </div>
+            <div class="card-footer text-muted">
+                {{post.date}}
+            </div>
+        </div>
+    </div>
+
+
+    {% endfor %}
+
+    {% endblock %}
