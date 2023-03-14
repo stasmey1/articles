@@ -26,15 +26,12 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
 
-
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments',verbose_name='Автор', blank=True, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор', blank=True,
+                             null=True)
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     comment = models.TextField('Комментарий', max_length=225)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.autor} - {self.comment[:20]}'
-
-
-

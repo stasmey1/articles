@@ -16,7 +16,6 @@ class PostsListView(ListView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
-    # fields = ['title', 'body', 'image', ]
     template_name = 'posts/post_create.html'
     login_url = 'login'
 
