@@ -7,15 +7,14 @@
 {% block content %}
 
 <h2>Новый пост</h2>
-<div class="col  "></div>
+
 
 <div class="col-6">
-
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form|crispy}}
-    <button type="submit" class="btn btn-success mt-2 mb-2">Опубликовать</button>
+    <button type="submit" class="btn btn-success mt-2 mb-2">Добавить</button>
 </form>
 </div>
 

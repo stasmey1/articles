@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import *
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.views.generic import ListView, DeleteView
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
-from .forms import *
 
-from .models import *
+from .forms import PostForm, CommentForm
+from .models import Post, Comment
 
 
 class PostsListView(ListView):
@@ -13,37 +12,47 @@ class PostsListView(ListView):
     template_name = 'posts/posts_list.html'
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    form_class = PostForm
-    template_name = 'posts/post_create.html'
-    login_url = 'login'
+def create_post(request):
+    form = PostForm()
+    template = 'posts/post_create.html'
 
-    def form_valid(self, form):
-        form.instance.autor = self.request.user
-        return super().form_valid(form)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            new_post = Post.objects.order_by('-pk').first()
+            return redirect(reverse('post', kwargs={'slug': new_post.slug}))
 
-
-class PostUpdateView(LoginRequiredMixin, UpdateView):
-    model = Post
-    form_class = PostForm
-    # fields = ['title', 'body', ]
-    template_name = 'posts/post_update.html'
-    login_url = 'login'
+    context = {'form': form}
+    return render(request, template_name=template, context=context)
 
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def update_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = PostForm(instance=post)
+    template = 'posts/post_update.html'
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('post', kwargs={'slug': post.slug}))
+
+    context = {'form': form}
+    return render(request, template_name=template, context=context)
+
+
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     comments = Comment.objects.filter(post=post)
 
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
-            form.autor = request.user
             form.post = post
-            new_comment = form.save()
-            return redirect(reverse_lazy('post', kwargs={'slug': new_comment.slug}))
+            form.save()
+            return redirect(reverse_lazy('post', kwargs={'slug': post.slug}))
     else:
         form = CommentForm()
         context = {
@@ -54,8 +63,7 @@ def post_detail(request, pk):
         return render(request, template_name='posts/post_detail.html', context=context)
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(DeleteView):
     model = Post
     template_name = 'posts/post_delete.html'
     success_url = reverse_lazy('posts_list')
-    login_url = 'login'

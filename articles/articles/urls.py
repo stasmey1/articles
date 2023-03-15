@@ -5,7 +5,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('users/', include('users.urls'), name='users'),
     path('users/', include('django.contrib.auth.urls')),
     path('', include('main.urls')),
 ]

@@ -7,39 +7,29 @@
 
 {% block content %}
 <div class="row">
-    {% if post.image %}
-        <div class="col-4">
-            <img src="{{post.image.url}}" height="300" alt="">
-        </div>
-    <div class="col">
-            {% if user.is_authenticated %}
-            {% if user.username == post.autor %}
-                <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.pk %}" role="button">Редактировать</a>
-                <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.pk %}" role="button">Удалить</a>
-            {% endif %}
+
+    <div class="col-4">
+        {% if post.image %}
+        <img src="{{post.image.url}}" height="300" alt="">
+        {% else %}
+        <img src="https://media.istockphoto.com/id/1357365823/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=PM_optEhHBTZkuJQLlCjLz-v3zzxp-1mpNQZsdjrbns="
+             height="300" alt="">
         {% endif %}
-        <h2>{{post.title}}</h2>
-        <p>Автор - {{post.autor}}</p>
-        <p>{{post.body}}</p>
-        <p>Опубликованно {{post.date}}</p>
     </div>
-    {% else %}
     <div class="col">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.pk %}" role="button">Редактировать</a>
-                <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.pk %}" role="button">Удалить</a>
-            {% endif %}
+        <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.slug %}" role="button">Редактировать</a>
+        <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.slug %}" role="button">Удалить</a>
         <h2>{{post.title}}</h2>
         <p>Автор - {{post.autor}}</p>
         <p>{{post.body}}</p>
         <p>Опубликованно {{post.date}}</p>
     </div>
-    {% endif %}
+
+
+
 
     {% if comments %}
     <div class="row">
-
-
         {% for comment in comments %}
         <div class="col-5 m-2 card">
             <div class="card-body">
@@ -48,14 +38,14 @@
             </div>
         </div>
         {% endfor %}
-        </div>
+    </div>
     {% endif %}
 
-    {% if user.is_authenticated %}
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{form|crispy}}
-            <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
-        </form>
-    {% endif %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
+    </form>
+
     {% endblock %}

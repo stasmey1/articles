@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<a class="btn btn-primary mb-2 " href="{% url 'post_create' %}" role="button">Написать пост</a>
+<a class="btn btn-primary mb-2 " href="{% url 'create_post' %}" role="button">Написать пост</a>
 
 <div class="row">
     {% for post in object_list %}
