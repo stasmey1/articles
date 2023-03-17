@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}<title>login</title>{% endblock %}
+
+
+{% block content %}
+
+{% if not user.is_authenticated %}
+<h2>Выход выполнен</h2>
+
+{% else %}
+<h2>Выход не выполнен</h2>
+
+{% endif %}
+<a href="{% url 'posts_list' %}">на главную</a>
+{% endblock %}

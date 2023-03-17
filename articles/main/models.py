@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -9,9 +10,16 @@ class Post(models.Model):
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     text = models.TextField('Текст', max_length=10000)
     date = models.DateTimeField('Дата публикации', auto_now_add=True)
-    autor = models.CharField('Автор', max_length=30, null=True)
+    unregistered_author = models.CharField('Незарегистрированный автор', max_length=30, default='AnonymousUser',
+                                           null=True, blank=True)
+    registered_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
     image = models.ImageField('Изображение', upload_to='post_image', null=True, blank=True)
     published = models.BooleanField('Публикация', default=True)
+
+    class Meta:
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
+        ordering = ['-date']
 
     def __str__(self):
         return self.title[:20]
@@ -27,9 +35,17 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Статья', blank=True,
                              null=True)
-    autor = models.CharField('Автор', default='noname', blank=True, max_length=100)
+    unregistered_author = models.CharField('Незарегистрированный автор', max_length=30, default='anonimus',
+                                           null=True, blank=True)
+    registered_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', blank=True,
+                                          null=True)
     comment = models.TextField('Комментарий', max_length=225)
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-date']
 
     def __str__(self):
         return f'{self.autor} - {self.comment[:20]}'

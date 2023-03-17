@@ -4,12 +4,17 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
+<h2>Вход выполнен</h2>
+<a href="{% url 'logout' %}">выйти</a>
+
+{% else %}
 <h2>login</h2>
 <form action="" method="post">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit" class="btn btn-success">login</button>
-
 </form>
 
+{% endif %}
 {% endblock %}

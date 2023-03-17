@@ -17,10 +17,16 @@
         {% endif %}
     </div>
     <div class="col">
+        {% if can_update %}
         <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.slug %}" role="button">Редактировать</a>
         <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.slug %}" role="button">Удалить</a>
+        {% endif %}
         <h2>{{post.title}}</h2>
-        <p>Автор - {{post.autor}}</p>
+        {% if post.registered_author %}
+        <p>Зарегистрированный автор - {{post.registered_author}}</p>
+        {% else %}
+        <p>Незарегистрированный автор - {{post.unregistered_author}}</p>
+        {% endif %}
         <p>{{post.body}}</p>
         <p>Опубликованно {{post.date}}</p>
     </div>
@@ -33,7 +39,11 @@
         {% for comment in comments %}
         <div class="col-5 m-2 card">
             <div class="card-body">
-                <p>От - {{comment.autor}}</p>
+                {% if comment.registered_author %}
+                <p>Зарегистрированный автор - {{comment.registered_author}}</p>
+                {% else %}
+                <p>Незазарегистрированный автор - {{comment.unregistered_author}}</p>
+                {% endif %}
                 <p>{{comment.comment}}</p>
             </div>
         </div>
@@ -44,7 +54,11 @@
 
     <form action="" method="POST">
         {% csrf_token %}
-        {{form|crispy}}
+        {% if not user.is_authenticated %}
+        <br>
+        {{form.unregistered_author.label}} - {{form.unregistered_author.as_widget}}
+        {% endif %}
+        {{form.comment.label}} - {{form.comment.as_widget}}
         <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
     </form>
 

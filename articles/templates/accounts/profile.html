@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{profile.username}}</h1>
+{% if profile_posts %}
+
+<ul>
+{% for post in profile_posts %}
+  <li><a href="{{post.get_absolute_url}}">{{post.title}}</a></li>
+{% endfor %}
+</ul>
+
+{% endif %}
+{% endblock %}
