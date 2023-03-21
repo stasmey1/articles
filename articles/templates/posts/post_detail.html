@@ -10,41 +10,59 @@
 
     <div class="col-4">
         {% if post.image %}
-        <img src="{{post.image.url}}" height="300" alt="">
+        <img src="{{post.image.url}}" alt="">
         {% else %}
-        <img src="https://media.istockphoto.com/id/1357365823/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=PM_optEhHBTZkuJQLlCjLz-v3zzxp-1mpNQZsdjrbns="
+
+        <img class="img-fluid" src="https://media.istockphoto.com/id/1357365823/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=PM_optEhHBTZkuJQLlCjLz-v3zzxp-1mpNQZsdjrbns="
              height="300" alt="">
+        {% endif %}
+        {% if can_update %}
+        <div class="col mt-3">
+            <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.slug %}" role="button">Редактировать</a>
+            <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.slug %}" role="button">Удалить</a>
+        </div>
+
         {% endif %}
     </div>
     <div class="col">
-        {% if can_update %}
-        <a class="btn btn-primary mb-2 " href="{% url 'post_update' post.slug %}" role="button">Редактировать</a>
-        <a class="btn btn-danger mb-2 " href="{% url 'post_delete' post.slug %}" role="button">Удалить</a>
-        {% endif %}
-        <h2>{{post.title}}</h2>
-        {% if post.registered_author %}
-        <p>Зарегистрированный автор - {{post.registered_author}}</p>
+
+        {% if post.author %}
+        <h2><a href="{% url 'author_post_list' post.author.pk  %}">{{post.author}}</a>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-check-circle-fill" viewBox="0 0 16 16" style="color: cornflowerblue">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+        </h2>
         {% else %}
-        <p>Незарегистрированный автор - {{post.unregistered_author}}</p>
+        <h2>{{post.anonimus_name}}</h2>
         {% endif %}
-        <p>{{post.body}}</p>
-        <p>Опубликованно {{post.date}}</p>
+
+        <h1>{{post.title}}</h1>
+        <p>{{post.date}}</p>
+        <p>{{post.text}}</p>
     </div>
-
-
 
 
     {% if comments %}
     <div class="row">
         {% for comment in comments %}
-        <div class="col-5 m-2 card">
+
+        <div class="col-3 card">
             <div class="card-body">
-                {% if comment.registered_author %}
-                <p>Зарегистрированный автор - {{comment.registered_author}}</p>
+                {% if comment.author %}
+                <p>{{comment.author}}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-check-circle-fill" viewBox="0 0 16 16" style="color: cornflowerblue">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+
+                </p>
                 {% else %}
-                <p>Незазарегистрированный автор - {{comment.unregistered_author}}</p>
+                <p>{{comment.anonimus_name}}</p>
                 {% endif %}
-                <p>{{comment.comment}}</p>
+                <p>{{comment.text}}</p>
             </div>
         </div>
         {% endfor %}
@@ -54,12 +72,8 @@
 
     <form action="" method="POST">
         {% csrf_token %}
-        {% if not user.is_authenticated %}
-        <br>
-        {{form.unregistered_author.label}} - {{form.unregistered_author.as_widget}}
-        {% endif %}
-        {{form.comment.label}} - {{form.comment.as_widget}}
-        <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
+        {{form|crispy}}
+        <button type="submit" class="btn btn-success mt-2">Отправить</button>
     </form>
 
     {% endblock %}

@@ -7,13 +7,13 @@ from django.contrib.auth.models import User
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ('unregistered_author', 'title', 'text', 'image',)
+        fields = ('title', 'text', 'image',)
 
 
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ('comment', 'unregistered_author')
+        fields = ('text',)
 
 
 class UserRegistrationForm(ModelForm):

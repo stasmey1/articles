@@ -9,12 +9,12 @@ class Post(models.Model):
     title = models.CharField('Заголовок', max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     text = models.TextField('Текст', max_length=10000)
-    date = models.DateTimeField('Дата публикации', auto_now_add=True)
-    unregistered_author = models.CharField('Незарегистрированный автор', max_length=30, default='AnonymousUser',
-                                           null=True, blank=True)
-    registered_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
+    date = models.DateTimeField('Дата публикации', auto_now_add=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', blank=True,
+                               null=True)
+    anonimus = models.BooleanField('Аноним', blank=True, default=True)
+    anonimus_name = models.CharField('Аноним', max_length=10, blank=True, default='Аноним')
     image = models.ImageField('Изображение', upload_to='post_image', null=True, blank=True)
-    published = models.BooleanField('Публикация', default=True)
 
     class Meta:
         verbose_name = 'Пост'
@@ -35,11 +35,11 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Статья', blank=True,
                              null=True)
-    unregistered_author = models.CharField('Незарегистрированный автор', max_length=30, default='anonimus',
-                                           null=True, blank=True)
-    registered_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', blank=True,
-                                          null=True)
-    comment = models.TextField('Комментарий', max_length=225)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', blank=True,
+                               null=True)
+    anonimus = models.BooleanField('Аноним', blank=True, default=True)
+    anonimus_name = models.CharField('Аноним', max_length=10, default='Аноним')
+    text = models.CharField('Комментарий', max_length=225)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -48,4 +48,4 @@ class Comment(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return f'{self.autor} - {self.comment[:20]}'
+        return f'{self.author} - {self.text[:20]}'

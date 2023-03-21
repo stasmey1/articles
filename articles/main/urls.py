@@ -6,10 +6,11 @@ urlpatterns = [
     path('accounts/register/', register, name='register'),
     path('accounts/profile/', profile, name='profile'),
 
+    path('author/post_list/<int:pk>/', author_post_list, name='author_post_list'),
+
     path('', PostsListView.as_view(), name='posts_list'),
     path('post/create/', create_post, name='create_post'),
     path('post/<slug:slug>/update/', update_post, name='post_update'),
     path('post/<slug:slug>/delete/', PostDeleteView.as_view(), name='post_delete'),
-
     path('post/<slug:slug>/', post_detail, name='post'),
 ]
