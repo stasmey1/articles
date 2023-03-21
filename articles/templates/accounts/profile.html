@@ -2,6 +2,9 @@
 
 {% block content %}
     <h1>{{profile.username}}</h1>
+
+
+<a class="btn btn-primary mb-2 " href="{% url 'create_post' %}" role="button">Написать пост</a>
 {% if profile_posts %}
 
 <ul>

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}<title>login</title>{% endblock %}
+{% load crispy_forms_tags %}
+{% block title %}<title>Вход в личный кабинет</title>{% endblock %}
 
 
 {% block content %}
@@ -9,12 +10,16 @@
 <a href="{% url 'logout' %}">выйти</a>
 
 {% else %}
-<h2>login</h2>
-<form action="" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" class="btn btn-success">login</button>
-</form>
+<div class="row justify-content-center align-items-center">
+    <div class="col-4">
+        <h2>Вход в личный кабинет</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Отправить</button>
+        </form>
+    </div>
+</div>
 
 {% endif %}
 {% endblock %}

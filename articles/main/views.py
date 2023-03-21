@@ -26,7 +26,7 @@ def register(request):
 
 @login_required
 def profile(request):
-    profile_ = User.objects.get(email=request.user.email)
+    profile_ = User.objects.get(pk=request.user.pk)
     profile_posts = Post.objects.filter(author=request.user)
     template = 'accounts/profile.html'
     context = {
@@ -43,9 +43,6 @@ class PostsListView(ListView):
 
 def create_post(request):
     if request.method == 'POST':
-        print(request.method)
-        print(request.POST)
-        print(request.FILES)
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(commit=False)
